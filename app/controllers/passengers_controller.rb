@@ -58,7 +58,7 @@ class PassengersController < ApplicationController
   # PATCH/PUT /passengers/1.json
   def update
     respond_to do |format|
-      if @passenger.update(passenger_params)
+      if @passenger.update(passenger_update_params)
         format.html { redirect_to @passenger, notice: 'Passenger was successfully updated.' }
         format.json { render :show, status: :ok, location: @passenger }
       else
@@ -71,6 +71,7 @@ class PassengersController < ApplicationController
   # DELETE /passengers/1
   # DELETE /passengers/1.json
   def destroy
+    @passenger.bookings.destroy
     @passenger.destroy
     respond_to do |format|
       format.html { redirect_to passengers_url, notice: 'Passenger was successfully destroyed.' }
@@ -87,5 +88,10 @@ class PassengersController < ApplicationController
     # Only allow a list of trusted parameters through.
     def passenger_params
       params.require(:passenger).permit(:name, :email, :phone_number)
+    end
+
+    # passenger update params
+    def passenger_update_params
+      params.require(:passenger).permit( :email, :phone_number)
     end
 end

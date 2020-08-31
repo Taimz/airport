@@ -46,7 +46,7 @@ class FlightsController < ApplicationController
   # PATCH/PUT /flights/1.json
   def update
     respond_to do |format|
-      if @flight.update(flight_params)
+      if @flight.update(flight_update_params)
         format.html { redirect_to @flight, notice: 'Flight was successfully updated.' }
         format.json { render :show, status: :ok, location: @flight }
       else
@@ -59,6 +59,7 @@ class FlightsController < ApplicationController
   # DELETE /flights/1
   # DELETE /flights/1.json
   def destroy
+    @flight.bookings.destroy
     @flight.destroy
     respond_to do |format|
       format.html { redirect_to flights_url, notice: 'Flight was successfully destroyed.' }
@@ -75,5 +76,10 @@ class FlightsController < ApplicationController
     # Only allow a list of trusted parameters through.
     def flight_params
       params.require(:flight).permit(:capacity, :date, :destination)
+    end
+
+    # flight update params
+    def flight_update_params
+      params.require(:flight).permit( :date, :destination)
     end
 end
